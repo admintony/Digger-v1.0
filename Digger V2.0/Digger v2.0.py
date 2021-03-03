@@ -1,6 +1,8 @@
+#coding:utf-8
 __author__="AdminTony"
-
 """
+2021.03.03更新：
+    1.修改结果匹配正则
 Digger v2.0 更新说明:
     1.优化算法，不再需要用户输入page_num
     2.支持存活检测，--status 选项，支持用户自定义存活状态码，默认为all即不进行存活检测
@@ -28,7 +30,7 @@ def crew(url):
     keyword = 'class="n">下一页&gt;</a>'
     res = requests.get(url,headers=headers)
     #style="text-decoration:none;">(.*?)<b>.*?</b>/&nbsp;</a>
-    re_ = re.compile(r'style="text-decoration:none;">(.*?)<b>.*?</b>/')
+    re_ = re.compile(r'style="text-decoration:none;position:relative;">(.*?)<b>.*?</b>/')
     result_=re_.findall(res.text)
     print("[+] 正在抓取 "+str(result_))
     if keyword not in res.text:
@@ -49,6 +51,7 @@ def run(domain):
         page_num +=1
         lock.release()
         url="https://www.baidu.com/s?wd=inurl:"+domain+"&pn="+str(page*10)+"&oq=inurl:"+domain
+        print(url)
         result_=crew(url)
         #将result_拼接到结果中
         lock.acquire()
